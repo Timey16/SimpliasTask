@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "FullStack\\fullstack.client\\frontend.esproj",
+        "Action": "Start",
+        "DebugTarget": "localhost (Chrome)"
+      },
+      {
+        "Path": "FullStack\\FullStack.Server\\backend.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
