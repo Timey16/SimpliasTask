@@ -1,0 +1,26 @@
+.login-form-margin {
+  margin-bottom: 16px;
+}
+
+.login-form-forgot {
+  text-align: center;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.form-container {
+  box-shadow: 0 0 4px #ccc;
+  padding: 50px 30px;
+  margin-top: 40px;
+  min-width: 350px;
+  max-width: 100%;
+}
+
+@media only screen and (max-width: 575px) {
+  .form-container {
+    box-shadow: none;
+    min-width: 95%;
+  }
+}

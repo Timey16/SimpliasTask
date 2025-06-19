@@ -1,6 +1,6 @@
-@FullStack.Server_HostAddress = http://localhost:5204
+@backend_HostAddress = http://localhost:5204
 
-GET {{FullStack.Server_HostAddress}}/weatherforecast/
+GET {{backend_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

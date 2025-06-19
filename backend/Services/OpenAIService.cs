@@ -6,6 +6,7 @@ namespace backend.Services
     public class OpenAIService : IOpenAIService
     {
         private ChatClient Client = new(model: "gpt-4o", apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+        private int maxRetries = 3;
 
         public OpenAIService() { }
 
@@ -13,8 +14,8 @@ namespace backend.Services
         {
             string completionText = await sendQueryAsync(
                 "Create a suggested priority for the following description for a given task. Answer in only a single word.\n" +
-                "Allowed answers are only \"low\", \"medium\" and \"high\" for the priority of said task. The description of the task is:\n" +
-                description);
+                "Allowed answers are only \"low\", \"medium\" and \"high\" for the priority of said task. The description of the task is:\n\"" +
+                description + "\"");
 
             string normalizedText = completionText.ToLower();
             switch (normalizedText)
@@ -28,30 +29,41 @@ namespace backend.Services
 
         private async Task<string> sendQueryAsync(string query)
         {
-            ChatCompletion completion = await Client.CompleteChatAsync(query);
-            int retries = 0;
-            if (completion.FinishReason == ChatFinishReason.Stop)
+            var completion = await Client.CompleteChatAsync(query);
+            var retries = 0;
+
+            if (completion == null && maxRetries > retries)
             {
-                if (completion.Content is { Count: > 0 })
+                retries++;
+                return await sendQueryAsync(query);
+            }
+            else if(completion == null)
+            {
+                throw new Exception("No Answer could be received");
+            }
+
+            if (completion.Value.FinishReason == ChatFinishReason.Stop)
+            {
+                if (completion.Value.Content is { Count: > 0 })
                 {
                     var completeMessage = "";
-                    foreach (var content in completion.Content)
+                    foreach (var content in completion.Value.Content)
                     {
                         completeMessage += content;
                     }
                     return completeMessage;
                 }
             }
-            else if(completion.FinishReason == ChatFinishReason.Length)
+            else if (completion.Value.FinishReason == ChatFinishReason.Length)
             {
                 throw new Exception("The requested query was too long and would have required too many token");
             }
-            else if (completion.FinishReason == ChatFinishReason.ContentFilter)
+            else if (completion.Value.FinishReason == ChatFinishReason.ContentFilter)
             {
                 throw new Exception("The request was not fulfilled due to Content Filter rules");
             }
 
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

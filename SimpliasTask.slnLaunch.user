@@ -3,13 +3,14 @@
     "Name": "New Profile",
     "Projects": [
       {
-        "Path": "FullStack\\fullstack.client\\frontend.esproj",
+        "Path": "backend\\backend.csproj",
         "Action": "Start",
-        "DebugTarget": "localhost (Chrome)"
+        "DebugTarget": "https"
       },
       {
-        "Path": "FullStack\\FullStack.Server\\backend.csproj",
-        "Action": "Start"
+        "Path": "frontend\\frontend.esproj",
+        "Action": "Start",
+        "DebugTarget": "localhost (Edge)"
       }
     ]
   }

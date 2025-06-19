@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "fullstack.client": {
+    "frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -17,16 +17,22 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/fullstack.client",
+            "outputPath": "dist/frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
+              }
             ],
             "styles": [
+              "./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -68,22 +74,22 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "fullstack.client:build:production"
+              "browserTarget": "frontend:build:production"
             },
             "development": {
-              "browserTarget": "fullstack.client:build:development"
+              "browserTarget": "frontend:build:development"
             }
           },
           "defaultConfiguration": "development",
           "options": {
             "proxyConfig": "src/proxy.conf.js",
-            "port": 59501
+            "port": 5400
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "fullstack.client:build"
+            "browserTarget": "frontend:build"
           }
         },
         "test": {
@@ -98,6 +104,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -106,5 +113,5 @@
       }
     }
   },
-  "defaultProject": "fullstack.client"
+  "defaultProject": "frontend"
 }

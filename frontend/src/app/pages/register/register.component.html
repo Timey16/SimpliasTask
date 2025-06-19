@@ -1,0 +1,54 @@
+<div nz-row nzJustify="center">
+  <div class="form-container">
+    <form nz-form
+          [formGroup]="validateForm"
+          class="login-form"
+          (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your full name!">
+          <nz-input-group nzPrefixIcon="user">
+            <input type="text"
+                   nz-input
+                   formControlName="fullName"
+                   placeholder="Full Name" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your e-mail address!">
+          <nz-input-group nzPrefixIcon="user">
+            <input type="text"
+                   nz-input
+                   formControlName="email"
+                   placeholder="E-Mail" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your Password!">
+          <nz-input-group nzPrefixIcon="lock">
+            <input type="password"
+                   nz-input
+                   formControlName="password"
+                   placeholder="Password" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please confirm your Password!">
+          <nz-input-group nzPrefixIcon="lock">
+            <input type="password"
+                   nz-input
+                   formControlName="passwordConfirm"
+                   placeholder="Confirm Password" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button
+              class="login-form-button login-form-margin"
+              [nzType]="'primary'">
+        Sign Up
+      </button>
+    </form>
+  </div>
+</div>

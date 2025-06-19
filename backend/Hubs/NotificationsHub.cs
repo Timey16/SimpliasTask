@@ -7,7 +7,7 @@ namespace backend.Hubs
     {
         public override async Task OnConnectedAsync()
         {
-            Clients.Client(Context.ConnectionId).ReceiveNotification($"Client has been connected to the SignalR hub. {Context.User.Identity.Name");
+            await Clients.Client(Context.ConnectionId).ReceiveNotification($"Client {Context?.User?.Identity?.Name} has been connected to the SignalR hub.");
             await base.OnConnectedAsync();
         }
     }
@@ -16,6 +16,5 @@ namespace backend.Hubs
     {
         Task ReceiveNotification(string message);
         Task ReceiveNewPriority(int id, Priority priority);
-
     }
 }
