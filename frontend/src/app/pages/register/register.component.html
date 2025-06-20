@@ -1,9 +1,9 @@
 <div nz-row nzJustify="center">
   <div class="form-container">
     <form nz-form
-          [formGroup]="validateForm"
-          class="login-form"
-          (ngSubmit)="submitForm()">
+          [formGroup]="registerForm"
+          class="register-form"
+          (ngSubmit)="register()">
       <nz-form-item>
         <nz-form-control nzErrorTip="Please input your full name!">
           <nz-input-group nzPrefixIcon="user">
@@ -39,13 +39,13 @@
           <nz-input-group nzPrefixIcon="lock">
             <input type="password"
                    nz-input
-                   formControlName="passwordConfirm"
+                   formControlName="confirmPassword"
                    placeholder="Confirm Password" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
       <button nz-button
-              class="login-form-button login-form-margin"
+              class="register-form-button register-form-margin"
               [nzType]="'primary'">
         Sign Up
       </button>

@@ -13,7 +13,7 @@ import { RegisterModel } from "../shared/models/register-model";
 })
 export class AuthService {
   private tokenKey = 'SimpliasTaskDemo_Token';
-  apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -53,11 +53,10 @@ export class AuthService {
       return false;
     }
 
-    console.log(this.isTokenValid(token));
     return this.isTokenValid(token);
   }
 
-  private retrieveToken(): string | null {
+  public retrieveToken(): string | null {
     return localStorage.getItem(this.tokenKey) || null;
   }
 

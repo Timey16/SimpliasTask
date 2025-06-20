@@ -1,0 +1,16 @@
+@media only screen and (max-width: 575px) {
+  :host {
+    box-shadow: none;
+    min-width: 95%;
+  }
+}
+
+.add-task-button {
+    margin-bottom: 10px
+}
+
+.header-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

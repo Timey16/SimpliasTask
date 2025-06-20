@@ -1,11 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { projectTitle } from '../../../main';
 import { AuthService } from '../../services/auth.service';
 import { LoginModel } from '../../shared/models/login-model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -14,16 +17,19 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   private subscription = new Subscription();
 
-  submitForm(): void {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private title: Title
+  ) { }
+
+  login() {
     for (const i in this.loginForm.controls) {
       this.loginForm.controls[i].markAsDirty();
       this.loginForm.controls[i].updateValueAndValidity();
     }
-  }
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
-
-  login() {
     const loginModel: LoginModel = {
       email: this.loginForm.controls['email'].value,
       password: this.loginForm.controls['password'].value
@@ -44,6 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.title.setTitle(`${projectTitle} - Login`);
     this.loginForm = this.fb.group({
       email: [null, [Validators.required, Validators.email]],
       password: [null, [Validators.required]]

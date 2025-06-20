@@ -1,3 +1,39 @@
-<h1>
-  >You are now logged in!
-</h1>
+<div class="header-buttons">
+    <button class="add-task-button" nz-button (click)="showModal()">
+        <i nz-icon nzType="plus" nzTheme="outline"></i> Create Task
+    </button>
+    <button class="add-task-button" nz-button nzType="link" (click)="logout()">
+        Logout
+    </button>
+</div>
+<nz-table #basicTable [nzData]="tasks" class="task-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created</th>
+            <th>Completed</th>
+            <th>Priority</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of basicTable.data">
+            <td>{{data.name}}</td>
+            <td>{{data.description}}</td>
+            <td>{{data.creationDate}}</td>
+            <td>{{data.completed}}</td>
+            <td>{{data.priority}}</td>
+            <td>
+                <button nz-button nzType="text" nzShape="circle" (click)="deleteTask(data.id)">
+                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="createModalVisible" nzTitle="Create Task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" nzOkText="Create Task" [nzOkDisabled]="!taskModal.taskForm.valid">
+    <ng-container *nzModalContent>
+        <task-modal #taskModal></task-modal>
+    </ng-container>
+</nz-modal>

@@ -21,6 +21,7 @@ import { TaskListComponent } from './pages/tasklist/tasklist.component';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { RoutingModule } from './routing.module';
+import { TaskModalComponent } from './pages/taskModal/taskModal.component';
 
 registerLocaleData(en);
 
@@ -42,8 +43,20 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     RouterModule,
     RoutingModule
   ],
-  declarations: [AppComponent, LoginComponent, RegisterComponent, TaskListComponent],
-  bootstrap: [AppComponent, LoginComponent, RegisterComponent, TaskListComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    RegisterComponent,
+    TaskListComponent,
+    TaskModalComponent
+  ],
+  bootstrap: [
+    AppComponent,
+    LoginComponent,
+    RegisterComponent,
+    TaskListComponent,
+    TaskModalComponent
+  ],
   providers: [{ provide: NZ_I18N, useValue: en_US }, { provide: NZ_ICONS, useValue: icons }]
 })
 export class AppModule { }

@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<UserEntityDbContext>(opts => opts.UseSqlite("data source=database.db"));
+builder.Services.AddDbContext<TaskEntityDbContext>(opts => opts.UseSqlite("data source=database.db"));
 builder.Services.AddIdentity<UserEntity, IdentityRole>()
     .AddEntityFrameworkStores<UserEntityDbContext>()
     .AddDefaultTokenProviders();
@@ -44,6 +45,7 @@ builder.Services.AddAuthentication(authOpts =>
 builder.Services.AddSignalR();
 
 builder.Services.AddScoped<IOpenAIService, OpenAIService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(sg =>
@@ -102,7 +104,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<NotificationsHub>("notifications");
+app.MapHub<NotificationsHub>("/signalr");
 
 app.MapFallbackToFile("/index.html");
 

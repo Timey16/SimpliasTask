@@ -2,12 +2,11 @@
 {
     public class TaskEntity
     {
-        public long Id { get; set; }
+        public required int TaskId { get; set; }
         public required string Name { get; set; }
-        public string? Description { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public bool IsComplete { get; set; }
+        public required string Description { get; set; }
+        public DateTime CreationDate { get; set; }
+        public bool Completed { get; set; }
         public Priority Priority { get; set; }
-        public Guid UserId { get; set; }
     }
 }

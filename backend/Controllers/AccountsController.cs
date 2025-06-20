@@ -1,12 +1,15 @@
 using backend.Entities;
-using Microsoft.AspNetCore.Mvc;
 using backend.Services;
-using Microsoft.AspNetCore.Identity;
 using backend.ViewModels;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Text;
 
 namespace backend.Controllers
 {
@@ -44,6 +47,9 @@ namespace backend.Controllers
             };
 
             IdentityResult result = await _userManager.CreateAsync(user, viewModel.Password);
+            var token = CreateToken(user);
+            //Activate account by confirming their email.
+            await _userManager.ConfirmEmailAsync(user, token);
 
             if(!result.Succeeded)
             {
@@ -54,7 +60,7 @@ namespace backend.Controllers
             {
                 Result = true,
                 Message = "Account created",
-                Token = CreateToken(user)
+                Token = token,
             });
         }
 
