@@ -32,7 +32,7 @@
     </tbody>
 </nz-table>
 
-<nz-modal [(nzVisible)]="createModalVisible" nzTitle="Create Task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" nzOkText="Create Task" [nzOkDisabled]="!taskModal.taskForm.valid">
+<nz-modal [(nzVisible)]="createModalVisible" nzTitle="Create Task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" nzOkText="Create Task" [nzOkDisabled]="!taskModal || !taskModal.taskForm || !taskModal.taskForm.valid">
     <ng-container *nzModalContent>
         <task-modal #taskModal></task-modal>
     </ng-container>

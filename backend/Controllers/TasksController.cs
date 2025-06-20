@@ -3,6 +3,7 @@ using backend.Hubs;
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
 namespace backend.Controllers
@@ -13,9 +14,9 @@ namespace backend.Controllers
     public class TasksController : ControllerBase
     {
         private ITaskService _taskService;
-        private NotificationsHub _notificationsHub;
+        private readonly IHubContext<NotificationsHub> _notificationsHub;
 
-        public TasksController(ITaskService taskService, NotificationsHub notificationsHub)
+        public TasksController(ITaskService taskService, IHubContext<NotificationsHub> notificationsHub)
         {
             _taskService = taskService;
             _notificationsHub = notificationsHub;
@@ -27,7 +28,7 @@ namespace backend.Controllers
             if (task != null)
             {
                 var newTask = await _taskService.CreateTaskAsync(task);
-                await _notificationsHub.Clients.Client(_notificationsHub.GetConnectionId()).ReceiveNewTaskAsync(task);
+                await _notificationsHub.Clients.All.SendAsync("TaskCreated", task);
                 return Ok(newTask);
             }
             return BadRequest("creatTaskNull");
@@ -44,7 +45,7 @@ namespace backend.Controllers
         public async Task<ActionResult<TaskEntity>> CompleteTask(int id)
         {
             var task = await _taskService.CompleteTaskAsync(id);
-            await _notificationsHub.Clients.Client(_notificationsHub.GetConnectionId()).ReceiveTaskCompletedAsync(id);
+            await _notificationsHub.Clients.All.SendAsync("TaskCompleted", id);
             return Ok(task);
         }
 
@@ -52,7 +53,7 @@ namespace backend.Controllers
         public async Task<ActionResult> DeleteTask(int id)
         {
             await _taskService.DeleteTaskAsync(id);
-            await _notificationsHub.Clients.Client(_notificationsHub.GetConnectionId()).ReceiveTaskDeletedAsync(id);
+            await _notificationsHub.Clients.All.SendAsync("TaskDeleted", id);
             return Ok();
         }
     }

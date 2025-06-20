@@ -78,7 +78,7 @@ namespace backend.Services
             task.Priority = priority;
             _context.Update(task);
             await _context.SaveChangesAsync();
-            await _notificationsHub.Clients.All.SendAsync("NewPriority", id, priority);
+            await _notificationsHub.Clients.All.SendAsync("TaskPriority", id, priority);
         }
     }
 }

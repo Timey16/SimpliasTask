@@ -13,11 +13,17 @@ export class TaskService {
   private apiUrl = environment.apiUrl;
   private tasks: TaskModel[] = [];
   private taskBehaviorSubject = new BehaviorSubject<TaskModel[]>([]);
+  private get headers() {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.retrieveToken()}`
+    })
+  }
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   public createTask(taskModel: TaskModel): Observable<TaskResponseModel> {
-    return this.http.post<TaskResponseModel>(`${this.apiUrl}tasks`, taskModel, { headers: this.getHeaders() })
+    return this.http.post<TaskResponseModel>(`${this.apiUrl}tasks`, taskModel, { headers: this.headers })
       .pipe(
         map((res) => {
           return res;
@@ -35,7 +41,11 @@ export class TaskService {
       return this.refreshTasks();
     }
 
-    return this.http.get<TaskModel[]>(`${this.apiUrl}tasks`, { headers: this.getHeaders() })
+    return this.http.get<TaskModel[]>(`${this.apiUrl}tasks`, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.retrieveToken()}`
+      }) })
       .pipe(
         map((res) => {
           for (const task of res) {
@@ -49,7 +59,7 @@ export class TaskService {
   }
 
   public completeTask(id: number): Observable<TaskResponseModel> {
-    return this.http.put<TaskResponseModel>(`${this.apiUrl}tasks/complete`, id, { headers: this.getHeaders() })
+    return this.http.put<TaskResponseModel>(`${this.apiUrl}tasks/complete`, id, { headers: this.headers })
       .pipe(
         map((res) => {
           return res;
@@ -64,7 +74,7 @@ export class TaskService {
   }
 
   public deleteTask(id: number): Observable<TaskResponseModel[]> {
-    return this.http.delete<TaskResponseModel[]>(`${this.apiUrl}tasks/${id}`, { headers: this.getHeaders() })
+    return this.http.delete<TaskResponseModel[]>(`${this.apiUrl}tasks/${id}`, { headers: this.headers })
       .pipe(
         map((res) => {
           return res;
@@ -86,12 +96,5 @@ export class TaskService {
   private refreshTasks(): Observable<TaskModel[]> {
     this.taskBehaviorSubject.next(this.tasks);
     return this.taskBehaviorSubject.asObservable();
-  }
-
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.retrieveToken()}`
-    })
   }
 }

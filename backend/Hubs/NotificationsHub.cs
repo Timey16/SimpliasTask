@@ -20,9 +20,5 @@ namespace backend.Hubs
     public interface INotificationClient
     {
         Task ReceiveNotificationAsync(string message);
-        Task ReceiveNewPriorityAsync(int id, Priority priority);
-        Task ReceiveNewTaskAsync(TaskEntity task);
-        Task ReceiveTaskDeletedAsync(int id);
-        Task ReceiveTaskCompletedAsync(int id);
     }
 }

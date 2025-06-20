@@ -43,6 +43,7 @@ builder.Services.AddAuthentication(authOpts =>
 });
 
 builder.Services.AddSignalR();
+builder.Services.AddCors();
 
 builder.Services.AddScoped<IOpenAIService, OpenAIService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
@@ -91,9 +92,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(options =>
 {
-    options.AllowAnyHeader();
-    options.AllowAnyMethod();
-    options.AllowAnyOrigin();
+    options.WithOrigins("http://localhost:5400", "http://localhost:5204", "https://localhost:5400", "https://localhost:5204")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
 });
 
 app.UseHttpsRedirection();

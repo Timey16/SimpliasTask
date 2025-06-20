@@ -1,14 +1,10 @@
 using backend.Entities;
-using backend.Services;
 using backend.ViewModels;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Text;
 
 namespace backend.Controllers
