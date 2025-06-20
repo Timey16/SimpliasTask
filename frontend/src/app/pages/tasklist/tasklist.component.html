@@ -6,27 +6,58 @@
         Logout
     </button>
 </div>
-<nz-table #basicTable [nzData]="tasks" class="task-table">
+<nz-table #basicTable [nzData]="tasks" [nzLoading]="tasks === null" class="task-table">
     <thead>
         <tr>
             <th>Name</th>
             <th>Description</th>
-            <th>Created</th>
-            <th>Completed</th>
-            <th>Priority</th>
+            <th nzWidth="200px">Created</th>
+            <th nzWidth="100px">Completed</th>
+            <th nzWidth="100px">Priority</th>
+            <th nzWidth="30px"></th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let data of basicTable.data">
             <td>{{data.name}}</td>
             <td>{{data.description}}</td>
-            <td>{{data.creationDate}}</td>
-            <td>{{data.completed}}</td>
-            <td>{{data.priority}}</td>
+            <td>{{data.creationDate | date}}</td>
+            <td nz-tooltip="Completion Status">
+                <div nz-row nzJustify="center">
+                    <label nz-checkbox [ngModel]="data.completed" (ngModelChange)="completeTask(data.taskId)" [nzDisabled]="data.completed"></label>
+                </div>
+            </td>
+            <td nz-tooltip="Determining priority" *ngIf="data.priority === 0">
+                <div nz-row nzJustify="center">
+                    <nz-spin nzSimple></nz-spin>
+                </div>
+            </td>
+            <td nz-tooltip="Priority couldn't be determined" *ngIf="data.priority === 1">
+                <div nz-row nzJustify="center">
+                    <i nz-icon nzType="question-circle" nzTheme="outline"></i>
+                </div>
+            </td>
+            <td nz-tooltip="Low priority" *ngIf="data.priority === 2">
+                <div nz-row nzJustify="center">
+                    <i nz-icon nzType="info-circle" nzTheme="twotone"></i>#
+                </div>
+            </td>
+            <td nz-tooltip="Medium priority" *ngIf="data.priority === 3">
+                <div nz-row nzJustify="center">
+                    <i nz-icon nzType="warning" nzTheme="twotone" nzTwotoneColor="#eed202"></i>
+                </div>
+            </td>
+            <td nz-tooltip="High priority" *ngIf="data.priority === 4">
+                <div nz-row nzJustify="center">
+                    <i nz-icon nzType="alert" nzTheme="twotone" nzTwotoneColor="#ff0f0f"></i>
+                </div>
+            </td>
             <td>
-                <button nz-button nzType="text" nzShape="circle" (click)="deleteTask(data.id)">
-                    <i nz-icon nzType="delete" nzTheme="outline"></i>
-                </button>
+                <div nz-row nzJustify="center">
+                    <button nz-button nzType="text" nzShape="circle" (click)="deleteTask(data.taskId)">
+                        <i nz-icon nzType="delete" nzTheme="outline"></i>
+                    </button>
+                </div>
             </td>
         </tr>
     </tbody>

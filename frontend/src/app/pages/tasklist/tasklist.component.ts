@@ -16,7 +16,7 @@ import { TaskModalComponent } from '../taskModal/taskModal.component';
 })
 export class TaskListComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
-  public tasks: TaskModel[] = [];
+  public tasks!: TaskModel[];
   public createModalVisible = false;
 
   @ViewChild('taskModal')
@@ -27,7 +27,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
     private taskService: TaskService,
     private cd: ChangeDetectorRef,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) { }
 
   public ngOnInit(): void {
@@ -50,7 +50,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.taskService.deleteTask(id);
+    this.subscription.add(this.taskService.deleteTask(id).subscribe());
   }
 
   public completeTask(id: number) {
@@ -59,7 +59,8 @@ export class TaskListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.taskService.completeTask(id);
+    this.subscription.add(this.taskService.completeTask(id).subscribe());
+    this.cd.markForCheck();
   }
 
   public ngOnDestroy(): void {

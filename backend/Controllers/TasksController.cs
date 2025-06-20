@@ -31,7 +31,7 @@ namespace backend.Controllers
                 await _notificationsHub.Clients.All.SendAsync("TaskCreated", task);
                 return Ok(newTask);
             }
-            return BadRequest("creatTaskNull");
+            return BadRequest("createTaskNull");
         }
 
         [HttpGet]
@@ -41,7 +41,7 @@ namespace backend.Controllers
             return Ok(tasks);
         }
 
-        [HttpPut("complete")]
+        [HttpPut("{id}/complete")]
         public async Task<ActionResult<TaskEntity>> CompleteTask(int id)
         {
             var task = await _taskService.CompleteTaskAsync(id);
@@ -49,7 +49,7 @@ namespace backend.Controllers
             return Ok(task);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTask(int id)
         {
             await _taskService.DeleteTaskAsync(id);

@@ -41,7 +41,7 @@ export class TaskModalComponent implements OnInit, OnDestroy {
     }
 
     const taskModel: TaskModel = {
-      id: 0,
+      taskId: 0,
       name: this.taskForm.controls['name'].value,
       description: this.taskForm.controls['description'].value,
       completed: false,

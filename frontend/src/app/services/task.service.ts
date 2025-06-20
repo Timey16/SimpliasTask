@@ -49,7 +49,7 @@ export class TaskService {
       .pipe(
         map((res) => {
           for (const task of res) {
-            this.tasks[task.id] = task;
+            this.tasks[task.taskId] = task;
           }
           this.tasks = res;
           this.taskBehaviorSubject.next(this.tasks);
@@ -59,7 +59,7 @@ export class TaskService {
   }
 
   public completeTask(id: number): Observable<TaskResponseModel> {
-    return this.http.put<TaskResponseModel>(`${this.apiUrl}tasks/complete`, id, { headers: this.headers })
+    return this.http.put<TaskResponseModel>(`${this.apiUrl}tasks/${id}/complete`, null, { headers: this.headers })
       .pipe(
         map((res) => {
           return res;
