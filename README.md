@@ -21,6 +21,7 @@ Navigate to the ```frontend``` folder using the CLI console and type ```npm inst
 1. make sure DeepSeek is running locally
 2. open the Solution file (```SimpliasTask.sln``` in the root folder)
 3. press "start" to launch the application. Both backend and frontend will both launch simultaneously. You may have to accept temporary certificates.
+4. Two browser windows will open. One is the frontend and one will be swagger that represents the API to send commands more directly.
 
 # Reasonings and explanations
 For the database I chose to use SQLite since the small size of the project means it can run alongside the server on the same system, an entirely own SQL Server won't be required.
