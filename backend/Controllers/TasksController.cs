@@ -4,7 +4,6 @@ using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
 
 namespace backend.Controllers
 {

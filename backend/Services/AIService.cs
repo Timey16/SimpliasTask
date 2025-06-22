@@ -1,11 +1,11 @@
 ﻿using backend.Entities;
-using DeepSeek.Core;
 using DeepSeek.Core.Models;
 using Newtonsoft.Json;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Text.Unicode;
 
 namespace backend.Services
@@ -39,18 +39,13 @@ namespace backend.Services
                 "The title of the tasks is: \"" + title + "\"\n"+
                 "The description of the task is: \"" + description + "\"");
 
-            var thinkingStart = completionText.IndexOf("<think>");
-            var thinkingEnd = completionText.IndexOf("</think>") + "</think>".Length;
-            var thinkingMessage = completionText.Substring(thinkingStart, thinkingEnd - thinkingStart);
-
-            var normalizedText = completionText.Substring(thinkingMessage.Length).Trim().ToLower();
-            switch (normalizedText)
+            var normalizedText = Regex.Replace(completionText, @"<think>.*<\/think>\s*", "", RegexOptions.Singleline);
+            if (Enum.TryParse<Priority>(normalizedText, true, out var priority))
             {
-                case "low": return Priority.LOW;
-                case "medium": return Priority.MEDIUM;
-                case "high": return Priority.HIGH;
-                default: return Priority.UNKNOWN;
+                return priority;
             }
+
+            return Priority.UNKNOWN;
         }
 
         private async Task<string> sendQueryAsync(string query, int retries = 0)
@@ -61,7 +56,6 @@ namespace backend.Services
                     Message.NewSystemMessage("Your task is to figure out the priority of a given task."),
                     Message.NewUserMessage(query)
                 ],
-                // Specify the model
                 Model = "deepseek-r1:1.5b",
                 Stream = false,
             };
@@ -80,8 +74,6 @@ namespace backend.Services
 
             return result?.Message?.Content ?? string.Empty;
         }
-
-
 
         public async Task<ChatResponse?> ChatAsync(ChatRequest request, CancellationToken cancellationToken)
         {
@@ -106,6 +98,7 @@ namespace backend.Services
         }
     }
 
+    //Reverse engineered using Wireshark so that the response can be properly processed
     public class ChatResponse
     {
         public ResponseMessage Message { get; set; }

@@ -1,5 +1,4 @@
-﻿using backend.Entities;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 
 namespace backend.Hubs
 {
@@ -9,11 +8,6 @@ namespace backend.Hubs
         {
             await Clients.Client(Context.ConnectionId).ReceiveNotificationAsync($"Client {Context?.User?.Identity?.Name} has been connected to the SignalR hub.");
             await base.OnConnectedAsync();
-        }
-
-        public string GetConnectionId()
-        {
-            return Context.ConnectionId;
         }
     }
 

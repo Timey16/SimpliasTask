@@ -14,6 +14,8 @@ export interface TaskList {
   providedIn: 'root'
 })
 export class TaskService {
+  public taskBehaviorSubject = new BehaviorSubject<TaskList | null>(null);
+
   private apiUrl = environment.apiUrl;
   private tasks: TaskList = { };
   private get headers() {
@@ -22,7 +24,6 @@ export class TaskService {
       'Authorization': `Bearer ${this.authService.retrieveToken()}`
     })
   }
-  public taskBehaviorSubject = new BehaviorSubject<TaskList|null>(null);
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.getInitialTasks().subscribe();
@@ -40,23 +41,6 @@ export class TaskService {
   public createTaskFromMessage(taskModel: TaskModel): void {
     this.tasks[taskModel.taskId] = taskModel;
     this.taskBehaviorSubject.next(this.tasks);
-  }
-
-  private getInitialTasks(): Observable<TaskModel[]> {
-    return this.http.get<TaskModel[]>(`${this.apiUrl}tasks`, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.authService.retrieveToken()}`
-      }) })
-      .pipe(
-        map((res) => {
-          for (const task of res) {
-            this.tasks[task.taskId] = task;
-          }
-          this.taskBehaviorSubject.next(this.tasks);
-          return res;
-        })
-      )
   }
 
   public completeTask(id: number): Observable<TaskResponseModel> {
@@ -91,5 +75,23 @@ export class TaskService {
   public updatePriorityFromMessage(id: number, priority: TaskPriority): void {
     this.tasks[id].priority = priority;
     this.taskBehaviorSubject.next(this.tasks);
+  }
+
+  private getInitialTasks(): Observable<TaskModel[]> {
+    return this.http.get<TaskModel[]>(`${this.apiUrl}tasks`, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authService.retrieveToken()}`
+      })
+    })
+      .pipe(
+        map((res) => {
+          for (const task of res) {
+            this.tasks[task.taskId] = task;
+          }
+          this.taskBehaviorSubject.next(this.tasks);
+          return res;
+        })
+      )
   }
 }

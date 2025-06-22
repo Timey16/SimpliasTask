@@ -3,8 +3,6 @@ using backend.Entities.Contexts;
 using backend.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace backend.Services
 {

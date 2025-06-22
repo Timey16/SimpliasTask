@@ -15,11 +15,12 @@ import { TaskModalComponent } from '../taskModal/taskModal.component';
   styleUrls: ['./tasklist.component.scss']
 })
 export class TaskListComponent implements OnInit, OnDestroy {
+  public createModalVisible = false;
+  public deleteModalVisible = false;
+
   private subscription = new Subscription();
   private selectedId = 0;
   public tasks!: TaskModel[];
-  public createModalVisible = false;
-  public deleteModalVisible = false;
 
   @ViewChild('taskModal')
   public taskModal!: TaskModalComponent;
@@ -34,7 +35,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.subscription.add(this.taskService.taskBehaviorSubject.subscribe((tasks) => {
-      console.log(tasks);
       if (!this.authService.isLoggedIn()) {
         this.router.navigate(['/']);
         return;
@@ -53,13 +53,8 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.title.setTitle(`${projectTitle} - Tasks`)
   }
 
-  private deleteTask(id: number) {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/']);
-      return;
-    }
-
-    this.subscription.add(this.taskService.deleteTask(id).subscribe());
+  public ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   public completeTask(id: number) {
@@ -70,10 +65,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
     this.subscription.add(this.taskService.completeTask(id).subscribe());
     this.cd.markForCheck();
-  }
-
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   public showCreateModal(): void {
@@ -114,5 +105,15 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.deleteTask(this.selectedId);
     this.selectedId = 0;
     this.cd.markForCheck();
+  }
+
+
+  private deleteTask(id: number) {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.subscription.add(this.taskService.deleteTask(id).subscribe());
   }
 }

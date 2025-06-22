@@ -14,7 +14,8 @@ import { LoginModel } from '../../shared/models/login-model';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  loginForm!: FormGroup;
+  public loginForm!: FormGroup;
+
   private subscription = new Subscription();
 
   constructor(
@@ -24,7 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private title: Title
   ) { }
 
-  login() {
+  public login() {
     for (const i in this.loginForm.controls) {
       this.loginForm.controls[i].markAsDirty();
       this.loginForm.controls[i].updateValueAndValidity();
@@ -49,7 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }));
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.title.setTitle(`${projectTitle} - Login`);
     this.loginForm = this.fb.group({
       email: [null, [Validators.required, Validators.email]],
@@ -57,7 +58,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 }
