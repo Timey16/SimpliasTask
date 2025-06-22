@@ -1,5 +1,5 @@
 <div class="header-buttons">
-    <button class="add-task-button" nz-button (click)="showModal()">
+    <button class="add-task-button" nz-button (click)="showCreateModal()">
         <i nz-icon nzType="plus" nzTheme="outline"></i> Create Task
     </button>
     <button class="add-task-button" nz-button nzType="link" (click)="logout()">
@@ -11,7 +11,7 @@
         <tr>
             <th>Name</th>
             <th>Description</th>
-            <th nzWidth="200px">Created</th>
+            <th nzWidth="150px">Created</th>
             <th nzWidth="100px">Completed</th>
             <th nzWidth="100px">Priority</th>
             <th nzWidth="30px"></th>
@@ -22,40 +22,40 @@
             <td>{{data.name}}</td>
             <td>{{data.description}}</td>
             <td>{{data.creationDate | date}}</td>
-            <td nz-tooltip="Completion Status">
+            <td>
                 <div nz-row nzJustify="center">
                     <label nz-checkbox [ngModel]="data.completed" (ngModelChange)="completeTask(data.taskId)" [nzDisabled]="data.completed"></label>
                 </div>
             </td>
             <td nz-tooltip="Determining priority" *ngIf="data.priority === 0">
-                <div nz-row nzJustify="center">
+                <div nz-row nzJustify="center" class="large-icon">
                     <nz-spin nzSimple></nz-spin>
                 </div>
             </td>
             <td nz-tooltip="Priority couldn't be determined" *ngIf="data.priority === 1">
-                <div nz-row nzJustify="center">
+                <div nz-row nzJustify="center" class="large-icon">
                     <i nz-icon nzType="question-circle" nzTheme="outline"></i>
                 </div>
             </td>
             <td nz-tooltip="Low priority" *ngIf="data.priority === 2">
-                <div nz-row nzJustify="center">
+                <div nz-row nzJustify="center" class="large-icon">
                     <i nz-icon nzType="info-circle" nzTheme="twotone"></i>#
                 </div>
             </td>
             <td nz-tooltip="Medium priority" *ngIf="data.priority === 3">
-                <div nz-row nzJustify="center">
+                <div nz-row nzJustify="center" class="large-icon">
                     <i nz-icon nzType="warning" nzTheme="twotone" nzTwotoneColor="#eed202"></i>
                 </div>
             </td>
             <td nz-tooltip="High priority" *ngIf="data.priority === 4">
-                <div nz-row nzJustify="center">
+                <div nz-row nzJustify="center" class="large-icon">
                     <i nz-icon nzType="alert" nzTheme="twotone" nzTwotoneColor="#ff0f0f"></i>
                 </div>
             </td>
             <td>
-                <div nz-row nzJustify="center">
-                    <button nz-button nzType="text" nzShape="circle" (click)="deleteTask(data.taskId)">
-                        <i nz-icon nzType="delete" nzTheme="outline"></i>
+                <div nz-row nzJustify="center" class="large-icon">
+                    <button nz-button nzType="text" nzShape="circle" (click)="showDeleteModal(data.taskId)">
+                        <i nz-icon nzType="delete" nzTheme="outline" nz></i>
                     </button>
                 </div>
             </td>
@@ -63,8 +63,14 @@
     </tbody>
 </nz-table>
 
-<nz-modal [(nzVisible)]="createModalVisible" nzTitle="Create Task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" nzOkText="Create Task" [nzOkDisabled]="!taskModal || !taskModal.taskForm || !taskModal.taskForm.valid">
+<nz-modal [(nzVisible)]="createModalVisible" nzTitle="Create Task" (nzOnCancel)="handleCreateCancel()" (nzOnOk)="handleCreateOk()" nzOkText="Create Task" [nzOkDisabled]="!taskModal || !taskModal.taskForm || !taskModal.taskForm.valid">
     <ng-container *nzModalContent>
         <task-modal #taskModal></task-modal>
+    </ng-container>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="deleteModalVisible" nzTitle="Delete Task" (nzOnCancel)="handleDeleteCancel()" (nzOnOk)="handleDeleteOk()" nzOkText="Delete Task">
+    <ng-container *nzModalContent>
+        Are you sure you want to delete this task?
     </ng-container>
 </nz-modal>

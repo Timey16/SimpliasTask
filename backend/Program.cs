@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Services.AddDbContext<UserEntityDbContext>(opts => opts.UseSqlite("data source=database.db"));
 builder.Services.AddDbContext<TaskEntityDbContext>(opts => opts.UseSqlite("data source=database.db"));
@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(authOpts =>
 builder.Services.AddSignalR();
 builder.Services.AddCors();
 
-builder.Services.AddScoped<IOpenAIService, OpenAIService>();
+builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -92,7 +92,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(options =>
 {
-    options.WithOrigins("http://localhost:5400", "http://localhost:5204", "https://localhost:5400", "https://localhost:5204")
+    options.WithOrigins("http://localhost:5400", "http://localhost:5204", "https://localhost:5400", "https://localhost:5204", "http://localhost:11434")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();

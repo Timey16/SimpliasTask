@@ -16,8 +16,10 @@ import { TaskModalComponent } from '../taskModal/taskModal.component';
 })
 export class TaskListComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
+  private selectedId = 0;
   public tasks!: TaskModel[];
   public createModalVisible = false;
+  public deleteModalVisible = false;
 
   @ViewChild('taskModal')
   public taskModal!: TaskModalComponent;
@@ -31,20 +33,27 @@ export class TaskListComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit(): void {
-    this.subscription.add(this.taskService.getTasks().subscribe((tasks) => {
+    this.subscription.add(this.taskService.taskBehaviorSubject.subscribe((tasks) => {
+      console.log(tasks);
       if (!this.authService.isLoggedIn()) {
         this.router.navigate(['/']);
         return;
       }
+      if (tasks != null) {
+        const taskList: TaskModel[] = [];
+        for (const id in tasks) {
+          taskList.push(tasks[id]);
+        }
 
-      this.tasks = tasks;
+        this.tasks = taskList;
+      }
       this.cd.markForCheck();
     }));
 
     this.title.setTitle(`${projectTitle} - Tasks`)
   }
 
-  deleteTask(id: number) {
+  private deleteTask(id: number) {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
       return;
@@ -67,8 +76,14 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  public showModal(): void {
+  public showCreateModal(): void {
     this.createModalVisible = true;
+    this.cd.markForCheck();
+  }
+
+  public showDeleteModal(id: number): void {
+    this.deleteModalVisible = true;
+    this.selectedId = id;
     this.cd.markForCheck();
   }
 
@@ -77,15 +92,27 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
-  public handleCancel(): void {
+  public handleCreateCancel(): void {
     this.createModalVisible = false;
     this.taskModal.resetForm();
     this.cd.markForCheck();
   }
 
-  public handleOk(): void {
+  public handleCreateOk(): void {
     this.createModalVisible = false;
     this.taskModal.createTask();
+    this.cd.markForCheck();
+  }
+
+  public handleDeleteCancel(): void {
+    this.deleteModalVisible = false;
+    this.cd.markForCheck();
+  }
+
+  public handleDeleteOk(): void {
+    this.deleteModalVisible = false;
+    this.deleteTask(this.selectedId);
+    this.selectedId = 0;
     this.cd.markForCheck();
   }
 }

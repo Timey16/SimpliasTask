@@ -3,19 +3,20 @@ using backend.Entities.Contexts;
 using backend.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace backend.Services
 {
     public class TaskService : ITaskService
     {
-        private readonly IOpenAIService _openAIService;
+        private readonly IAIService _aiService;
         private readonly IHubContext<NotificationsHub> _notificationsHub;
         private readonly TaskEntityDbContext _context;
 
-        public TaskService(IOpenAIService openAIService, IHubContext<NotificationsHub> notificationsHub, TaskEntityDbContext context)
+        public TaskService(IAIService aiService, IHubContext<NotificationsHub> notificationsHub, TaskEntityDbContext context)
         {
-            _openAIService = openAIService;
+            _aiService = aiService;
             _notificationsHub = notificationsHub;
             _context = context;
         }
@@ -30,7 +31,7 @@ namespace backend.Services
                 throw new Exception($"Task of name {task.Name} couldn't be created");
             }
 
-            _ = ReceiveNewPriorityAsync(newTask.TaskId, newTask.Description);
+            _ = ReceiveNewPriorityAsync(newTask.TaskId, newTask.Name, newTask.Description);
             return newTask;
         }
 
@@ -38,7 +39,15 @@ namespace backend.Services
         {
             await _context.Database.EnsureCreatedAsync();
             await _context.Database.OpenConnectionAsync();
-            return _context.Tasks.ToArray();
+            var tasks = _context.Tasks.ToArray();
+            foreach (var task in tasks)
+            {
+                if(task.Priority == Priority.UNSET)
+                {
+                    _ = ReceiveNewPriorityAsync(task.TaskId, task.Name, task.Description);
+                }
+            }
+            return tasks;
         }
 
         public async Task<TaskEntity> CompleteTaskAsync(int id)
@@ -67,18 +76,26 @@ namespace backend.Services
             await _context.SaveChangesAsync();
         }
 
-        private async Task ReceiveNewPriorityAsync(int id, string description)
+        private async Task ReceiveNewPriorityAsync(int id, string title, string description)
         {
-            var priority = await _openAIService.getPriorityFromDescriptionAsync(description);
+
             var task = _context.Find<TaskEntity>(id);
+            var priority = await _aiService.getPriorityFromDescriptionAsync(title, description);
             if (task == null)
             {
                 return;
             }
             task.Priority = priority;
-            _context.Update(task);
-            await _context.SaveChangesAsync();
-            await _notificationsHub.Clients.All.SendAsync("TaskPriority", id, priority);
+
+            //db has been dispose use anew.
+            var optionsBuilder = new DbContextOptionsBuilder<TaskEntityDbContext>();
+            optionsBuilder.UseSqlite("data source=database.db");
+            using (var db = new TaskEntityDbContext(optionsBuilder.Options))
+            {
+                db.Update(task);
+                await db.SaveChangesAsync();
+                await _notificationsHub.Clients.All.SendAsync("TaskPriority", id, priority);
+            }
         }
     }
 }
