@@ -11,13 +11,13 @@ Afterwards download DeepSeek's small model for local use via the command line by
 then provide it locally via
 ```ollama serve```
 
-#Installing the Backend
+# Installing the Backend
 If the nuget CLI is installed navigate to the ```backend``` folder and type ```nuget install``` to install the required dependencies or use the Solution with Visual Studio to do so.
 
-#Installing the Frontend
+# Installing the Frontend
 Navigate to the ```frontend``` folder using the CLI console and type ```npm install``` to install the required packages for the frontend.
 
-#Launching the project
+# Launching the project
 1. make sure DeepSeek is running locally
 2. open the Solution file (```SimpliasTask.sln``` in the root folder)
 3. press "start" to launch the application. Both backend and frontend will both launch simultaneously. You may have to accept temporary certificates.
@@ -41,7 +41,7 @@ For the frontend I chose Angular and NG-Zorro as it provides a quick framework w
 
 First I implemented the controllers and the login system as well as the databse. Swagger allows me to send test queries to my API to check out what it reports back. Once that was finished I created the frontend. First the login and signup, then the tasklist. Finally I implemented the AI operation.
 
-#Possible features if that project would be maintained in the future
+# Possible features if that project would be maintained in the future
 1. adding user roles
 2. being able to create tasks for users and for roles
 3. as DeepSeek adds the reasoning for the priority, add a modal that's being opened when the priority is clicked that shows the reasoning DeepSeek gave
